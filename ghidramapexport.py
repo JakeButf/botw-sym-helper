@@ -31,7 +31,7 @@ with open(output_file, "w") as f:
         else:
             section_class = "BSS"
         
-        f.write(" 0000:{:016X} {:016X}H {:<24} {}\n".format(start_addr, length, name, section_class))
+        f.write(" 0000:000000{:016X} {:016X}H {:<24} {}\n".format(start_addr, length, name, section_class))
 
     print("Getting symbols...")
     f.write("\n\n  Address         Publics by Value\n\n")
