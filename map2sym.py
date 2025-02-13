@@ -1,11 +1,8 @@
-#credits to https://github.com/fruityloops1/zeldar/blob/master/scripts/convertMapToSym.py
-#i just cleaned the script up
-
 import argparse
 
 symbol_matchers = ["", "_ZN", "_ZNK", "_ZTVN"]
 
-def convert_map_to_sym(map_file_path, sym_file_path, symbol_filter=None, start_name="__main_start"):
+def convert_map_to_sym(map_file_path, sym_file_path, symbol_filter=None, start_name="__main_start", address_format="32"):
     sym_entries = []
     
     with open(map_file_path, 'r') as map_file:
@@ -30,21 +27,36 @@ def convert_map_to_sym(map_file_path, sym_file_path, symbol_filter=None, start_n
             
             address, symbol = parts
             
+<<<<<<< HEAD
+            if not address.startswith('00000000:00000071'):  # Filter out out-of-context addresses
+                continue
+            
+            hex_address = '0x' + address.split(':')[1]  # Extract full hex address
+            
+            if address_format == "32": #this implementation feels weird. idk why sdk is a different format
+                formatted_address = hex_address.replace('0x00000071', '0x')
+            elif address_format == "64":
+                formatted_address = hex_address.replace('0x00000071', '0x00000000')
+            else:
+                print("Error: Invalid address format. Use '32' or '64'.")
+                return
+=======
             if not address.startswith('00000000:00000071'): # Filter out unimportant addresses
                 continue;
 
             address = address.replace('00000000:00000071', '0x')
+>>>>>>> cb92c6d846565aa8ef46ae6233ff5b765e35e76b
             
             if symbol_filter:
                 for matcher in symbol_matchers:
                     filt = f'{matcher}{len(symbol_filter)}{symbol_filter}'
                     if symbol.startswith(filt):
                         if not symbol.endswith("_0"):  # Exclude exported nn defs
-                            sym_entries.append(f'{symbol} = {start_name} + {address};')
+                            sym_entries.append(f'{symbol} = {start_name} + {formatted_address};')
                         break
             else:
                 if not symbol.endswith("_0"):  # Exclude exported nn defs
-                    sym_entries.append(f'{symbol} = {start_name} + {address};')
+                    sym_entries.append(f'{symbol} = {start_name} + {formatted_address};')
     
     # Write output file
     with open(sym_file_path, 'w') as sym_file:
@@ -58,6 +70,7 @@ if __name__ == '__main__':
     parser.add_argument('output', help='Path to the output sym file')
     parser.add_argument('-f', '--filter', dest='symbol_filter', help='Filter symbols by prefix')
     parser.add_argument('-s', '--start', dest='start_name', default='__main_start', help='Use something other than __main_start')
+    parser.add_argument('-af', '--addressformat', dest='address_format', default='32', choices=['32', '64'], help='Map addresses to size (32 or 64)')
     
     args = parser.parse_args()
-    convert_map_to_sym(args.input, args.output, args.symbol_filter, args.start_name)
+    convert_map_to_sym(args.input, args.output, args.symbol_filter, args.start_name, args.address_format)
