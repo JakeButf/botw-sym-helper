@@ -5,7 +5,7 @@
 from ghidra.program.model.symbol import SymbolType
 from ghidra.program.model.listing import Program
 
-output_file = r"/path/to/putthefile"  # Change this path as needed
+output_file = r"C:\Users\jacob\Documents\botwdump.map"  # Change this path as needed
 
 with open(output_file, "w") as f:
     
@@ -31,7 +31,7 @@ with open(output_file, "w") as f:
         else:
             section_class = "BSS"
         
-        f.write(" 0000:000000{:016X} {:016X}H {:<24} {}\n".format(start_addr, length, name, section_class))
+        f.write(" 0000:{:016X} {:016X}H {:<24} {}\n".format(start_addr, length, name, section_class))
 
     print("Getting symbols...")
     f.write("\n\n  Address         Publics by Value\n\n")
@@ -43,7 +43,7 @@ with open(output_file, "w") as f:
         if sym.getSymbolType() in [SymbolType.FUNCTION, SymbolType.LABEL]:
             address = sym.getAddress()
             name = sym.getName()
-            formatted_address = "00000000:{:012X}".format(address.getOffset())
+            formatted_address = "00000000:000000{:012X}".format(address.getOffset())
             f.write(" {}       {}\n".format(formatted_address, name))
 
 print("Successfully exported to:", output_file)
