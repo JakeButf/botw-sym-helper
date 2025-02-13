@@ -43,7 +43,7 @@ with open(output_file, "w") as f:
         if sym.getSymbolType() in [SymbolType.FUNCTION, SymbolType.LABEL]:
             address = sym.getAddress()
             name = sym.getName()
-            formatted_address = "00000000:000000{:012X}".format(address.getOffset())
+            formatted_address = "00000000:0000{:012X}".format(address.getOffset())
             f.write(" {}       {}\n".format(formatted_address, name))
 
 print("Successfully exported to:", output_file)
