@@ -14,8 +14,8 @@ def process_sym_file(sym_file_path):
     with open(sym_file_path, "r", encoding="utf-8") as infile:
         lines = infile.readlines()
 
-    stub_lines = [line for line in lines if line.startswith(("DAT_", "FUN_", "LAB_"))]
-    non_stub_lines = [line for line in lines if not line.startswith(("DAT_", "FUN_", "LAB_"))]
+    stub_lines = [line for line in lines if line.startswith(("DAT_", "FUN_", "LAB_", "switchD", "caseD"))]
+    non_stub_lines = [line for line in lines if not line.startswith(("DAT_", "FUN_", "LAB_", "switchD", "caseD"))]
 
     with open(stubs_filename, "w", encoding="utf-8") as stub_file:
         stub_file.writelines(stub_lines)
