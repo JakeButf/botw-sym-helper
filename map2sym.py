@@ -29,6 +29,10 @@ def convert_map_to_sym(map_file_path, sym_file_path, symbol_filter=None, start_n
                 continue
             
             address, symbol = parts
+            
+            if not address.startswith('00000000:00000071'): # Filter out unimportant addresses
+                continue;
+
             address = address.replace('00000000:00000071', '0x')
             
             if symbol_filter:
